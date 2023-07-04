@@ -1,11 +1,15 @@
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.GenericContainer;
 
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MyTest {
 
@@ -14,19 +18,20 @@ public class MyTest {
 
     private static final  GenericContainer<?> devapp = new GenericContainer<>("devapp")
             .withExposedPorts(9199);
+
     private static final GenericContainer<?> prodapp = new GenericContainer<>("prodapp")
             .withExposedPorts(9299);
 
 
     @BeforeAll
     public void setUp(){
-        //devapp.start();
-        //prodapp.start();
+        devapp.start();
+        prodapp.start();
     }
 
     @Test
     public void contextLoads(){
-        devapp.start();
+        //devapp.start();
         Integer appPort =devapp.getMappedPort(9199);
         ResponseEntity<String> forEntity = restTemplate.getForEntity(
                 "http://localhost:" + appPort, String.class);
@@ -35,7 +40,7 @@ public class MyTest {
 
     @Test
     public void contextLoads2(){
-        prodapp.start();
+        //prodapp.start();
         ResponseEntity<String> forEntity = restTemplate.getForEntity(
                 "http://localhost:" + prodapp.getMappedPort(9299), String.class);
         System.out.println(forEntity.getBody());
