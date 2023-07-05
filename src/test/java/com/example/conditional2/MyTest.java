@@ -50,6 +50,4 @@ public class MyTest {
                         + "/profile", String.class);
         assertEquals("Current profile is production",forEntity.getBody());
     }
-
-
 }
